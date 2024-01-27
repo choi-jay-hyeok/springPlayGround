@@ -75,5 +75,14 @@ public class BoardController {
 //        return "redirect:/board?id=" + boardDTO.getId();
     }
 
-
+    //페이징 처리
+    // /board/paging?page=2
+    // 처음 페이지 요청은 1페이지를 보여줌
+    // @RequestParam의 page 값이 필수는 아님(required = false), page값이 넘어오지 않으면 기본값=1(defaultValue = "1")
+    @GetMapping("/paging")
+    public String paging(Model model,
+                         @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
+        System.out.println("page = " + page);
+        return "index";
+    }
 }
