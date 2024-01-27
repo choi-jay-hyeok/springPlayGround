@@ -82,7 +82,7 @@ public class BoardController {
     @GetMapping("/paging")
     public String paging(Model model,
                          @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
-        System.out.println("page = " + page);
+        System.out.println("page = " + page); //페이지 값이 제대로 넘어오는지 확인
         return "index";
     }
 }
