@@ -27,7 +27,7 @@ public class BoardController {
     public String save(@ModelAttribute BoardDTO boardDTO) {
         int saveResult = boardService.save(boardDTO);
         if (saveResult > 0) {
-            return "redirect:/board/";
+            return "redirect:/";
         } else {
             return "save";
         }
@@ -83,6 +83,8 @@ public class BoardController {
     public String paging(Model model,
                          @RequestParam(value = "page", required = false, defaultValue = "1") int page) {
         System.out.println("page = " + page); //페이지 값이 제대로 넘어오는지 확인
+        //해당 페이지에서 보여줄 글 목록을 DB에서 가져오기
+        List<BoardDTO> pagingList = boardService.pagingList(page);
         return "index";
     }
 }

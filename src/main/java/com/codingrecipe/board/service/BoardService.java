@@ -36,4 +36,8 @@ public class BoardService {
     public void update(BoardDTO boardDTO) {
         boardRepository.update(boardDTO);
     }
+
+    public List<BoardDTO> pagingList(int page) {
+        return null;
+    }
 }
