@@ -16,11 +16,13 @@ public class BoardController {
 
     private final BoardService boardService;
 
+    //게시글 작성 페이지 이동
     @GetMapping("/save")
     public String saveForm() {
         return "save";
     }
 
+    //게시글 작성 처리
     @PostMapping("/save")
     public String save(@ModelAttribute BoardDTO boardDTO) {
         int saveResult = boardService.save(boardDTO);
@@ -31,6 +33,7 @@ public class BoardController {
         }
     }
 
+    //게시글 전체 리스트 조회
     @GetMapping("/")
     public String findAll(Model model) {
         List<BoardDTO> boardDTOList = boardService.findAll();
@@ -38,6 +41,7 @@ public class BoardController {
         return "list";
     }
 
+    //조회 수 증가
     @GetMapping
     public String findById(@RequestParam("id") Long id, Model model) {
         boardService.updateHits(id);
@@ -45,4 +49,31 @@ public class BoardController {
         model.addAttribute("board", boardDTO);
         return "detail";
     }
+
+    //게시글 삭제
+    @GetMapping("/delete")
+    public String delete(@RequestParam("id") Long id) {
+        boardService.delete(id);
+        return "redirect:/board/";
+    }
+
+    //게시글 수정 페이지 이동
+    @GetMapping("/update")
+    public String updateForm(@RequestParam("id") Long id, Model model) {
+        BoardDTO boardDTO = boardService.findById(id);
+        model.addAttribute("board", boardDTO);
+        return "update";
+    }
+
+    //게시글 수정 처리
+    @PostMapping("/update")
+    public String update(@ModelAttribute BoardDTO boardDTO, Model model) {
+        boardService.update(boardDTO); //전달받은 boardDTO를 사용해서 게시글 업데이트
+        BoardDTO dto = boardService.findById(boardDTO.getId()); //업데이트 된 게시글을 다시 DB에서 가져와서 dto 객체에 담음
+        model.addAttribute("board", dto); //화면 board라는 이름으로 dto를 전달
+        return "detail";
+//        return "redirect:/board?id=" + boardDTO.getId();
+    }
+
+
 }
