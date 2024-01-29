@@ -2,7 +2,7 @@ package com.codingrecipe.board.controller;
 
 import com.codingrecipe.board.dto.CommentDTO;
 import com.codingrecipe.board.service.CommentService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/comment")
 public class CommentController {
-    @Autowired
-    private CommentService commentService;
+
+    private final CommentService commentService;
 
     @PostMapping("/save")
     public @ResponseBody List<CommentDTO> save(@ModelAttribute CommentDTO commentDTO) {
