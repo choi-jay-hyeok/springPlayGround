@@ -23,7 +23,7 @@
         update board_table set boardTitle=#{boardTitle}, boardContents=#{boardContents}
         where id=#{id}
     </update>
-    <select id="paging" parameterType="java.util.HashMap" resultType="board">
+    <select id="pagingList" parameterType="java.util.HashMap" resultType="board">
         select * from board_table order by id desc limit #{start}, #{limit} <!-- service에서 Map에 담았던 2개의 key값 "start"와 "limit" -->
     </select>
     <select id="boardCount" resultType="Integer">

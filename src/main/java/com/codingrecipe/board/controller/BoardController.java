@@ -28,7 +28,7 @@ public class BoardController {
     public String save(@ModelAttribute BoardDTO boardDTO) {
         int saveResult = boardService.save(boardDTO);
         if (saveResult > 0) {
-            return "redirect:/";
+            return "redirect:/board/paging";
         } else {
             return "save";
         }
@@ -42,12 +42,16 @@ public class BoardController {
         return "list";
     }
 
-    //조회 수 증가
+    //게시글 상세페이지
     @GetMapping
-    public String findById(@RequestParam("id") Long id, Model model) {
+    public String findById(@RequestParam("id") Long id,
+                           @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                           Model model) {
+        //조회 수 증가
         boardService.updateHits(id);
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
+        model.addAttribute("page", page);
         return "detail";
     }
 
@@ -79,7 +83,7 @@ public class BoardController {
     //페이징 처리
     // /board/paging?page=2
     // 처음 페이지 요청은 1페이지를 보여줌
-    // @RequestParam의 page 값이 필수는 아님(required = false), page값이 넘어오지 않으면 기본값=1(defaultValue = "1")
+    // @RequestParam의 page 값이 필수는 아님(required = false), page 값이 넘어오지 않으면 기본값=1(defaultValue = "1")
     @GetMapping("/paging")
     public String paging(Model model,
                          @RequestParam(value = "page", required = false, defaultValue = "1") int page) {

@@ -40,15 +40,16 @@ public class BoardService {
         boardRepository.update(boardDTO);
     }
 
-    int pageLimit = 3; //한 페이지 당 표시할 글의 개수
-    int blockLimit = 3; //하단에 표시할 페이지 번호 개수
+    int pageLimit = 3; //한 페이지에 표시할 글의 개수
+    int blockLimit = 3; //하단에 표시할 페이지 번호의 개수
 
     public List<BoardDTO> pagingList(int page) {
         /*
-        1 페이지 당 보여지는 글의 개수: 3
+        1 페이지 당 보여지는 글의 개수: 3개일 경우
             1 page => 0
             2 page => 3
             3 page => 6
+            int pagingStart = (page - 1) * 3;
         */
         int pagingStart = (page - 1) * pageLimit;
         //숫자 2개 전달하기 위해 Map 사용
@@ -63,8 +64,8 @@ public class BoardService {
     public PageDTO pagingParam(int page) {
         //전체 글 개수 조회
         int boardCount = boardRepository.boardCount();
-        //전체 페이지 개수 계산(글이 총 10개인 경우, 페이지의 수는 4개가 필요
-        int maxPage = (int) Math.ceil((double) boardCount / pageLimit);
+        //전체 페이지 개수 계산(글이 총 10개인 경우 10/3= 3.33333 = > 페이지의 수는 4개가 필요
+        int maxPage = (int) (Math.ceil((double) boardCount / pageLimit));
         //시작 페이지 값 계산(1, 4, 7, 10 ~~)
         int startPage = (((int) (Math.ceil((double) page / blockLimit))) - 1) * blockLimit + 1;
         //끝 페이지 값 계산(3, 6, 9, 12, ~~)
