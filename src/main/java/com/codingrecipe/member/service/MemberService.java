@@ -61,9 +61,27 @@ public class MemberService {
     public MemberDTO findById(Long id) {
         Optional<MemberEntity> optionalMemberEntity = memberRepository.findById(id);
         if (optionalMemberEntity.isPresent()) {
+            /*
+            MemberEntity memberEntity = optionalMemberEntity.get();
+            MemberDTO memberDTO = MemberDTO.toMemberDTO(memberEntity);
+            return memberDTO;
+            */
+            return MemberDTO.toMemberDTO(optionalMemberEntity.get()); //위의 세 줄을 한 줄로 표현한 것
+        } else {
+            return null;
+        }
+    }
+
+    public MemberDTO updateForm(String myEmail) {
+        Optional<MemberEntity> optionalMemberEntity = memberRepository.findByMemberEmail(myEmail);
+        if (optionalMemberEntity.isPresent()) {
             return MemberDTO.toMemberDTO(optionalMemberEntity.get());
         } else {
             return null;
         }
+    }
+
+    public void update(MemberDTO memberDTO) {
+        memberRepository.save(MemberEntity.toUpdateMemberEntity(memberDTO)); //toMemberEntity로 해버리면 update가 아니라 insert가 됨
     }
 }

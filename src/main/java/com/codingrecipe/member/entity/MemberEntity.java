@@ -31,4 +31,14 @@ public class MemberEntity {
         memberEntity.setMemberName(memberDTO.getMemberName());
         return memberEntity;
     }
+
+    //회원 가입시에는 id값이 순서대로 자동부여 됐었지만, 수정 시에는 이미 있는 id값을 불러와야 함
+    public static MemberEntity toUpdateMemberEntity(MemberDTO memberDTO) {
+        MemberEntity memberEntity = new MemberEntity();
+        memberEntity.setId(memberDTO.getId());
+        memberEntity.setMemberEmail(memberDTO.getMemberEmail());
+        memberEntity.setMemberPassword(memberDTO.getMemberPassword());
+        memberEntity.setMemberName(memberDTO.getMemberName());
+        return memberEntity;
+    }
 }
