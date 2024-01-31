@@ -84,4 +84,8 @@ public class MemberService {
     public void update(MemberDTO memberDTO) {
         memberRepository.save(MemberEntity.toUpdateMemberEntity(memberDTO)); //toMemberEntity로 해버리면 update가 아니라 insert가 됨
     }
+
+    public void deleteById(Long id) {
+        memberRepository.deleteById(id);
+    }
 }
