@@ -80,12 +80,18 @@ public class MemberController {
     @PostMapping("/member/update")
     public String update(@ModelAttribute MemberDTO memberDTO) {
         memberService.update(memberDTO);
-        return "redirect:/member/" + memberDTO.getId();
+        return "redirect:/member/" + memberDTO.getId(); //redirect로 하지 않으면 model에 memberDTO를 담아서 넘기지 않았기 때문에 빈 페이지만 뜸
     }
 
     @GetMapping("/member/delete/{id}")
     public String deleteById(@PathVariable Long id) {
         memberService.deleteById(id);
-        return "redirect:/member/";
+        return "redirect:/member/"; //위의 수정 처리에서 redirect한 이유와 동일
+    }
+
+    @GetMapping("/member/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "index";
     }
 }
