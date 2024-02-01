@@ -29,7 +29,7 @@ public class BoardEntity extends BaseEntity{
     @Column
     private int boardHits;
 
-    //Entity -> DTO 변환
+    //DTO -> Entity 변환
     public static BoardEntity toSaveEntity(BoardDTO boardDTO) {
         BoardEntity boardEntity = new BoardEntity();
         boardEntity.setBoardWriter(boardDTO.getBoardWriter());
