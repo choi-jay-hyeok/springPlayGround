@@ -60,5 +60,11 @@ public class BoardController {
         return "detail";
 //        return "redirect:/board/" + boardDTO.getId(); //현재 코드에서는 redirect로 인해 수정을 해도 조회수가 1 올라감
     }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id) {
+        boardService.delete(id);
+        return "redirect:/board/";
+    }
 }
 
