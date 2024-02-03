@@ -33,4 +33,13 @@ public class BoardDTO {
         boardDTO.setBoardUpdatedTime(boardEntity.getUpdatedTime());
         return boardDTO;
     }
+
+    //페이징 처리 시 필요한 데이터의 생성자
+    public BoardDTO(Long id, String boardWriter, String boardTitle, int boardHits, LocalDateTime boardCreatedTime) {
+        this.id = id;
+        this.boardWriter = boardWriter;
+        this.boardTitle = boardTitle;
+        this.boardHits = boardHits;
+        this.boardCreatedTime = boardCreatedTime;
+    }
 }
