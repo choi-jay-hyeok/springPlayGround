@@ -3,14 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <title>Save</title>
+    <!-- 부트스트랩 CDN 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px 0;
+            display: inline-block;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-<form action="/board/save" method="post">
-    writer: <input type="text" name="boardWriter"> <br>
-    pass: <input type="password" name="boardPass"> <br>
-    title: <input type="text" name="boardTitle"> <br>
-    contents: <textarea name="boardContents" cols="30" rows="10"></textarea> <br>
-    <input type="submit" value="글작성">
-</form>
+<div class="container mt-5">
+    <form action="/board/save" method="post">
+        <div class="mb-3">
+            <label for="boardWriter" class="form-label">닉네임</label>
+            <input type="text" class="form-control" name="boardWriter" required>
+        </div>
+        <div class="mb-3">
+            <label for="boardPass" class="form-label">비밀번호</label>
+            <input type="password" class="form-control" name="boardPass" required>
+        </div>
+        <div class="mb-3">
+            <label for="boardTitle" class="form-label">제목</label>
+            <input type="text" class="form-control" name="boardTitle" required>
+        </div>
+        <div class="mb-3">
+            <label for="boardContents" class="form-label">내용</label>
+            <textarea class="form-control" name="boardContents" rows="5" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">글 작성</button>
+    </form>
+</div>
+<!-- 부트스트랩 JS 및 Popper.js, Bootstrap JS CDN 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

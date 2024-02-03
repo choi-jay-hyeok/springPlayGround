@@ -3,17 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Update</title>
+    <!-- 부트스트랩 CDN 추가 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+    </style>
 </head>
 <body>
-<form action="/board/update" method="post" name="updateForm">
-    <input type="hidden" name="id" th:value="${boardUpdate.id}">
-    writer: <input type="text" name="boardWriter" th:value="${boardUpdate.boardWriter}" readonly> <br>
-    pass: <input type="password" name="boardPass" id="boardPass"> <br>
-    title: <input type="text" name="boardTitle" th:value="${boardUpdate.boardTitle}"> <br>
-    contents: <textarea name="boardContents" cols="30" rows="10" th:text="${boardUpdate.boardContents}"></textarea> <br>
-    <input type="hidden" name="boardHits" th:value="${boardUpdate.boardHits}">
-    <input type="button" value="글수정" onclick="boardUpdate()">
-</form>
+<div class="container mt-5">
+    <form action="/board/update" method="post" name="updateForm">
+        <input type="hidden" name="id" th:value="${boardUpdate.id}">
+        <div class="form-group">
+            <label for="boardWriter">닉네임</label>
+            <input type="text" name="boardWriter" class="form-control" th:value="${boardUpdate.boardWriter}" readonly>
+        </div>
+        <div class="form-group">
+            <label for="boardPass">비밀번호</label>
+            <input type="password" name="boardPass" id="boardPass" class="form-control">
+        </div>
+        <div class="form-group">
+            <label for="boardTitle">제목</label>
+            <input type="text" name="boardTitle" class="form-control" th:value="${boardUpdate.boardTitle}">
+        </div>
+        <div class="form-group">
+            <label for="boardContents">내용</label>
+            <textarea name="boardContents" class="form-control" cols="30" rows="10" th:text="${boardUpdate.boardContents}"></textarea>
+        </div>
+        <input type="hidden" name="boardHits" th:value="${boardUpdate.boardHits}">
+        <button type="button" class="btn btn-primary" onclick="boardUpdate()">글 수정</button>
+    </form>
+</div>
+<!-- 부트스트랩 JS 및 Popper.js, Bootstrap JS CDN 추가 -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script th:inline="javascript">
     const boardUpdate = () => {
         const pass = [[${boardUpdate.boardPass}]];

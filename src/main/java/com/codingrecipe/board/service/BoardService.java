@@ -67,7 +67,7 @@ public class BoardService {
 
     public Page<BoardDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber() - 1;
-        int pageLimit = 3; //한 페이지에 보여줄 글의 개수
+        int pageLimit = 5; //한 페이지에 보여줄 글의 개수
         //한 페이지 당 3개씩 글을 보여주고, id(엔티티 클래스의 필드 이름으로 써야 함) 기준으로 내림차순 정렬
        //매개변수로 넘겨주는 page의 값은 0부터 시작하기 때문에 위의 int page 선언하는 부분에 -1을 빼는 것임
         Page<BoardEntity> boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));

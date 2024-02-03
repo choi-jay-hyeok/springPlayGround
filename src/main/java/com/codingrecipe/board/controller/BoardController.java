@@ -30,7 +30,7 @@ public class BoardController {
     public String save(@ModelAttribute BoardDTO boardDTO) {
         System.out.println("boardDTO = " + boardDTO);
         boardService.save(boardDTO);
-        return "index";
+        return "redirect:/board/paging";
     }
 
     //글 전체 목록
@@ -51,6 +51,7 @@ public class BoardController {
         //게시글 데이터를 가져와서 detail.html에 출력
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("board", boardDTO);
+        //상세 페이지에서 '목록'을 눌렀을 때 해당 상세 페이지가 있던 페이지로 돌아가기 위함(1 페이지로 돌아가지 않고)
         model.addAttribute("page", pageable.getPageNumber());
         return "detail";
     }
@@ -65,9 +66,11 @@ public class BoardController {
 
     //글 수정 처리
     @PostMapping("/update")
-    public String update(@ModelAttribute BoardDTO boardDTO, Model model) {
+    public String update(@ModelAttribute BoardDTO boardDTO, Model model,
+                         @PageableDefault(page = 1) Pageable pageable) {
         BoardDTO board = boardService.update(boardDTO);
         model.addAttribute("board", board);
+        model.addAttribute("page", pageable.getPageNumber());
         return "detail";
 //        return "redirect:/board/" + boardDTO.getId(); //현재 코드에서는 redirect로 인해 수정을 해도 조회수가 1 올라감
     }
@@ -76,7 +79,7 @@ public class BoardController {
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         boardService.delete(id);
-        return "redirect:/board/";
+        return "redirect:/board/paging";
     }
 
     //페이징 처리
@@ -86,7 +89,7 @@ public class BoardController {
 //        pageable.getPageNumber();
         //service클래스에서 return boardDTOS를 받아서 boardList에 담음
         Page<BoardDTO> boardList = boardService.paging(pageable);
-        int blockLimit = 3; //하단에 나오는 한번에 표시되는 페이지의 개수
+        int blockLimit = 5; //하단에 나오는 한번에 표시되는 페이지의 개수
         int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) -1) * blockLimit + 1; //blockLimit의 첫 숫자
         int endPage =  ((startPage + blockLimit -1) < boardList.getTotalPages()) ? startPage + blockLimit -1 : boardList.getTotalPages();//blockLimit의 마지막 숫자
 
