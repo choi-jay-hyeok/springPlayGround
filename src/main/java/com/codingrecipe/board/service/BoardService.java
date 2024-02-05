@@ -68,15 +68,15 @@ public class BoardService {
     public Page<BoardDTO> paging(Pageable pageable) {
         int page = pageable.getPageNumber() - 1;
         int pageLimit = 5; //한 페이지에 보여줄 글의 개수
-        //한 페이지 당 3개씩 글을 보여주고, id(엔티티 클래스의 필드 이름으로 써야 함) 기준으로 내림차순 정렬
-       //매개변수로 넘겨주는 page의 값은 0부터 시작하기 때문에 위의 int page 선언하는 부분에 -1을 빼는 것임
+        //한 페이지 당 3개씩 글을 보여주고, id(엔티티에 작성한 이름 기준으로 써야 함.(DB말고)) 기준으로 내림차순 정렬
+       //아래에서 PageRequest.of()안의 매개변수로 넘겨주는 page의 값은 0부터 시작하기 때문에 위의 int page 선언하는 부분에 -1을 빼는 것임
         Page<BoardEntity> boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
 
         System.out.println("boardEntities.getContent() = " + boardEntities.getContent()); // 요청 페이지에 해당하는 글
-        System.out.println("boardEntities.getTotalElements() = " + boardEntities.getTotalElements()); // 전체 글갯수
+        System.out.println("boardEntities.getTotalElements() = " + boardEntities.getTotalElements()); // 전체 글 개수
         System.out.println("boardEntities.getNumber() = " + boardEntities.getNumber()); // DB로 요청한 페이지 번호
-        System.out.println("boardEntities.getTotalPages() = " + boardEntities.getTotalPages()); // 전체 페이지 갯수
-        System.out.println("boardEntities.getSize() = " + boardEntities.getSize()); // 한 페이지에 보여지는 글 갯수
+        System.out.println("boardEntities.getTotalPages() = " + boardEntities.getTotalPages()); // 전체 페이지 개수
+        System.out.println("boardEntities.getSize() = " + boardEntities.getSize()); // 한 페이지에 보여지는 글 개수
         System.out.println("boardEntities.hasPrevious() = " + boardEntities.hasPrevious()); // 이전 페이지 존재 여부
         System.out.println("boardEntities.isFirst() = " + boardEntities.isFirst()); // 첫 페이지 여부
         System.out.println("boardEntities.isLast() = " + boardEntities.isLast()); // 마지막 페이지 여부
@@ -86,4 +86,5 @@ public class BoardService {
         Page<BoardDTO> boardDTOS = boardEntities.map(board -> new BoardDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle(), board.getBoardHits(), board.getCreatedTime()));
         return boardDTOS;
     }
+
 }
