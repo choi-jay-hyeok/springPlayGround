@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -27,7 +28,7 @@ public class BoardController {
 
     //글 작성 처리
     @PostMapping("/save")
-    public String save(@ModelAttribute BoardDTO boardDTO) {
+    public String save(@ModelAttribute BoardDTO boardDTO) throws IOException {
         System.out.println("boardDTO = " + boardDTO);
         boardService.save(boardDTO);
         return "redirect:/board/paging";
@@ -90,8 +91,8 @@ public class BoardController {
         //service클래스에서 return boardDTOS를 받아서 boardList에 담음
         Page<BoardDTO> boardList = boardService.paging(pageable);
         int blockLimit = 5; //하단에 나오는 한번에 표시되는 페이지의 개수
-        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) -1) * blockLimit + 1; //blockLimit의 첫 숫자
-        int endPage =  ((startPage + blockLimit -1) < boardList.getTotalPages()) ? startPage + blockLimit -1 : boardList.getTotalPages();//blockLimit의 마지막 숫자
+        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; //blockLimit의 첫 숫자
+        int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages(); //blockLimit의 마지막 숫자
 
         model.addAttribute("boardList", boardList);
         model.addAttribute("startPage", startPage);
