@@ -42,7 +42,7 @@
 </head>
 <body>
 <div class="container mt-5">
-    <form action="/board/save" method="post">
+    <form action="/board/save" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="boardWriter" class="form-label">닉네임</label>
             <input type="text" class="form-control" name="boardWriter" required>
@@ -58,6 +58,10 @@
         <div class="mb-3">
             <label for="boardContents" class="form-label">내용</label>
             <textarea class="form-control" name="boardContents" rows="5" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="boardContents" class="form-label">파일 첨부</label>
+            <input type="file" name="boardFile" multiple>
         </div>
         <button type="submit" class="btn btn-primary">글 작성</button>
     </form>

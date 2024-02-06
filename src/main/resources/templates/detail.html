@@ -33,6 +33,14 @@
             <th>내용</th>
             <td th:text="${board.boardContents}"></td>
         </tr>
+        <tr th:if="${board.fileAttached == 1}">
+            <th>이미지</th>
+            <td>
+                <div th:each="fileName: ${board.storedFileName}">
+                    <img th:src="@{|/upload/${fileName}|}" alt="" style="display: block; margin-bottom: 10px;">
+                </div>
+            </td>
+        </tr>
     </table>
     <button class="btn btn-primary" onclick="listReq()">목록</button>
     <button class="btn btn-warning" onclick="updateReq()">수정</button>
