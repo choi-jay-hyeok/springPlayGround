@@ -17,13 +17,13 @@ public class CommentDTO {
     private Long boardId;
     private LocalDateTime commentCreatedTime;
 
-    public static CommentDTO toCommentDTO(CommentEntity commentEntity) {
+    public static CommentDTO toCommentDTO(CommentEntity commentEntity, Long boardId) {
         CommentDTO commentDTO = new CommentDTO();
         commentDTO.setId(commentEntity.getId());
         commentDTO.setCommentWriter(commentEntity.getCommentWriter());
         commentDTO.setCommentContents(commentEntity.getCommentContents());
         commentDTO.setCommentCreatedTime(commentEntity.getCreatedTime());
-        commentDTO.setBoardId(commentEntity.getBoardEntity().getId()); //Service 메서드에 @Transactional
+        commentDTO.setBoardId(boardId); //Service 메서드에 @Transactional
         return commentDTO;
     }
 }
