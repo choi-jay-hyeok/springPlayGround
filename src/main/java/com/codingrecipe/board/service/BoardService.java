@@ -105,26 +105,37 @@ public class BoardService {
         boardRepository.deleteById(id);
     }
 
+    //검색어 없을 시 페이징
     public Page<BoardDTO> paging(Pageable pageable) {
-        int page = pageable.getPageNumber() - 1;
-        int pageLimit = 5; //한 페이지에 보여줄 글의 개수
-        //한 페이지 당 3개씩 글을 보여주고, id(엔티티에 작성한 이름 기준으로 써야 함.(DB말고)) 기준으로 내림차순 정렬
-       //아래에서 PageRequest.of()안의 매개변수로 넘겨주는 page의 값은 0부터 시작하기 때문에 위의 int page 선언하는 부분에 -1을 빼는 것임
-        Page<BoardEntity> boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        return pagingWithSearch(pageable, null);
+    }
 
-        System.out.println("boardEntities.getContent() = " + boardEntities.getContent()); // 요청 페이지에 해당하는 글
-        System.out.println("boardEntities.getTotalElements() = " + boardEntities.getTotalElements()); // 전체 글 개수
-        System.out.println("boardEntities.getNumber() = " + boardEntities.getNumber()); // DB로 요청한 페이지 번호
-        System.out.println("boardEntities.getTotalPages() = " + boardEntities.getTotalPages()); // 전체 페이지 개수
-        System.out.println("boardEntities.getSize() = " + boardEntities.getSize()); // 한 페이지에 보여지는 글 개수
-        System.out.println("boardEntities.hasPrevious() = " + boardEntities.hasPrevious()); // 이전 페이지 존재 여부
-        System.out.println("boardEntities.isFirst() = " + boardEntities.isFirst()); // 첫 페이지 여부
-        System.out.println("boardEntities.isLast() = " + boardEntities.isLast()); // 마지막 페이지 여부
+    //검색어 있을 시 페이징
+    public Page<BoardDTO> searchByTitle(String title, Pageable pageable) {
+        return pagingWithSearch(pageable, title);
+    }
+
+    //페이징 처리 및 검색 기능
+    public Page<BoardDTO> pagingWithSearch(Pageable pageable, String title) {
+        int page = pageable.getPageNumber() - 1;
+        int pageLimit = 3; //한 페이지에 보여줄 글의 개수
+        //한 페이지 당 3개씩 글을 보여주고, id(엔티티에 작성한 이름 기준으로 써야 함.(DB말고)) 기준으로 내림차순 정렬
+        //아래에서 PageRequest.of()안의 매개변수로 넘겨주는 page의 값은 0부터 시작하기 때문에 위의 int page 선언하는 부분에 -1을 빼는 것임
+
+        Page<BoardEntity> boardEntities;
+        if (title != null && !title.isEmpty()) {
+            //레포지토리 메서드를 사용하여 검색 수행
+            boardEntities = boardRepository.findByBoardTitleContainingIgnoreCase(title, PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        } else {
+            // 페이징 수행
+            boardEntities = boardRepository.findAll(PageRequest.of(page, pageLimit, Sort.by(Sort.Direction.DESC, "id")));
+        }
 
         //페이지 목록에서 보여줄 데이터: id, writer, title, hit, createdTime
         //Entity -> DTO로 변환(이 코드의 board가 엔티티이기 때문에 DTO로 변환해줘야 함)
+        // Entity -> DTO 변환
         Page<BoardDTO> boardDTOS = boardEntities.map(board -> new BoardDTO(board.getId(), board.getBoardWriter(), board.getBoardTitle(), board.getBoardHits(), board.getCreatedTime()));
+
         return boardDTOS;
     }
-
 }

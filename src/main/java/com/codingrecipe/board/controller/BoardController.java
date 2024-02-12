@@ -5,6 +5,7 @@ import com.codingrecipe.board.dto.CommentDTO;
 import com.codingrecipe.board.service.BoardService;
 import com.codingrecipe.board.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -18,6 +19,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/board")
+@Slf4j
 public class BoardController {
 
     private final BoardService boardService;
@@ -93,12 +95,20 @@ public class BoardController {
     //페이징 처리
     //페이지 요청이 올 때, /board/paging?page=1
     @GetMapping("/paging")
-    public String paging(@PageableDefault(page = 1)Pageable pageable, Model model) {
-//        pageable.getPageNumber();
+    public String paging(@PageableDefault(page = 1) Pageable pageable,
+                         @RequestParam(name = "title", required = false) String title,
+                         Model model) {
         //service클래스에서 return boardDTOS를 받아서 boardList에 담음
-        Page<BoardDTO> boardList = boardService.paging(pageable);
-        int blockLimit = 5; //하단에 나오는 한번에 표시되는 페이지의 개수
-        int startPage = (((int)(Math.ceil((double)pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; //blockLimit의 첫 숫자
+        Page<BoardDTO> boardList;
+
+        if (title != null && !title.isEmpty()) {
+            boardList = boardService.searchByTitle(title, pageable);
+        } else {
+            boardList = boardService.paging(pageable);
+        }
+
+        int blockLimit = 3; //하단에 나오는 한번에 표시되는 페이지의 개수
+        int startPage = (((int) (Math.ceil((double) pageable.getPageNumber() / blockLimit))) - 1) * blockLimit + 1; //blockLimit의 첫 숫자
         int endPage = ((startPage + blockLimit - 1) < boardList.getTotalPages()) ? startPage + blockLimit - 1 : boardList.getTotalPages(); //blockLimit의 마지막 숫자
 
         model.addAttribute("boardList", boardList);
