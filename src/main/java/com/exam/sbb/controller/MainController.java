@@ -1,8 +1,12 @@
 package com.exam.sbb.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -35,6 +39,16 @@ public class MainController {
     public int showPlus(@RequestParam int a, int b) {
         return a + b;
     }
+
+    //서블릿 방식의 응답/요청
+    @GetMapping("/plus2")
+    public void showPlus2(HttpServletRequest req, HttpServletResponse res) throws IOException {
+        int a = Integer.parseInt(req.getParameter("a"));
+        int b = Integer.parseInt(req.getParameter("b"));
+
+        res.getWriter().append(a + b + "");
+    }
+
 
     @GetMapping("/minus")
     @ResponseBody
@@ -72,5 +86,35 @@ public class MainController {
         return IntStream.rangeClosed(1, limit)
                 .mapToObj(i -> "%d * %d = %d".formatted(finalDan, i, finalDan * i))
                 .collect(Collectors.joining("<br>"));
+    }
+
+    @GetMapping("/mbti/{name}")
+    @ResponseBody
+    public String showMbti(@PathVariable("name") String name) {
+        String rs = switch (name) {
+            case "홍길동" -> "INFP";
+            case "홍길순" -> "ENFP";
+            case "임꺽정" -> "ISTP";
+            case "박상원" -> "INFJ";
+            default -> "모름";
+        };
+        return rs;
+    }
+
+    @GetMapping("/saveSession/{name}/{value}")
+    @ResponseBody
+    public String showSession(@PathVariable("name") String name, @PathVariable("value") String value, HttpServletRequest req) {
+        HttpSession session = req.getSession();
+        session.setAttribute(name, value);
+        return "세션변수 %s의 값이 %s(으)로 설정되었습니다.".formatted(name, value);
+    }
+
+    @GetMapping("/getSession/{name}")
+    @ResponseBody
+    public String showSession(@PathVariable("name") String name, /*HttpServletRequest req,*/ HttpSession session ) {
+        /*HttpSession session = req.getSession(); // req => 쿠키 => JSESSIONID => 세션을 얻을 수 있음*/
+        String value = (String) session.getAttribute(name);
+        session.setAttribute(name, value);
+        return "세션변수 %s의 값은 %s 입니다.".formatted(name, value);
     }
 }
