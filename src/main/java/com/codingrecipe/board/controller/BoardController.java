@@ -50,7 +50,7 @@ public class BoardController {
 
     //글 상세 페이지
     @GetMapping("/{id}")
-    public String findById(@PathVariable Long id, Model model,
+    public String findById(@PathVariable("id") Long id, Model model,
                            @PageableDefault(page = 1) Pageable pageable) {
         //해당 게시글의 조회수를 1 올리고,
         boardService.updateHits(id);
@@ -68,7 +68,7 @@ public class BoardController {
 
     //글 수정 페이지 요청
     @GetMapping("/update/{id}")
-    public String updateForm(@PathVariable Long id, Model model) {
+    public String updateForm(@PathVariable("id") Long id, Model model) {
         BoardDTO boardDTO = boardService.findById(id);
         model.addAttribute("boardUpdate", boardDTO);
         return "update";
@@ -87,7 +87,7 @@ public class BoardController {
 
     //글 삭제
     @GetMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
+    public String delete(@PathVariable("id") Long id) {
         boardService.delete(id);
         return "redirect:/board/paging";
     }
