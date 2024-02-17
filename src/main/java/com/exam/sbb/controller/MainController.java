@@ -3,10 +3,16 @@ package com.exam.sbb.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -111,10 +117,106 @@ public class MainController {
 
     @GetMapping("/getSession/{name}")
     @ResponseBody
-    public String showSession(@PathVariable("name") String name, /*HttpServletRequest req,*/ HttpSession session ) {
-        /*HttpSession session = req.getSession(); // req => 쿠키 => JSESSIONID => 세션을 얻을 수 있음*/
+    public String showSession(@PathVariable("name") String name, /*HttpServletRequest req,*/ HttpSession session) {
+        /*HttpSession session = req.getSession(); // req => 쿠키 => JSESSIONID => 세션을 얻을 수 있음,
+        * HttpServletRequest를 통하지 않고 바로 HttpSession 을 통해서도 세션 접근 가능*/
         String value = (String) session.getAttribute(name);
         session.setAttribute(name, value);
         return "세션변수 %s의 값은 %s 입니다.".formatted(name, value);
+    }
+
+    private List<Article> articles = new ArrayList<>(
+            Arrays.asList(
+                    new Article("제목", "내용"),
+                    new Article("제목", "내용")
+            )
+    );
+
+    @GetMapping("/addArticle")
+    @ResponseBody
+    public String addArticle(String title, String body) {
+        Article article = new Article(title, body);
+        articles.add(article);
+
+        return "%d번 게시물이 생성되었습니다.".formatted(article.getId());
+    }
+
+    @GetMapping("/article/{id}")
+    @ResponseBody
+    public Article getArticle(@PathVariable("id") int id) {
+        Article article = articles //id가 1번인 게시물이 앞에서 3번째
+                .stream()
+                .filter(a -> a.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        return article;
+    }
+
+    @GetMapping("/modifyArticle/{id}")
+    @ResponseBody
+    public String modifyArticle(@PathVariable("id")int id, String title, String body) {
+
+        Article article = articles
+                .stream()
+                .filter(a -> a.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (article == null) {
+            return "%d번 게시물은 존재하지 않습니다.".formatted(id);
+        }
+
+        article.setTitle(title);
+        article.setBody(body);
+
+        return "%d번 게시물을 수정하였습니다.".formatted(article.getId());
+    }
+
+    @GetMapping("/deleteArticle/{id}")
+    @ResponseBody
+    public String deleteArticle(@PathVariable("id")int id) {
+
+        Article article = articles
+                .stream()
+                .filter(a -> a.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (article == null) {
+            return "%d번 게시물은 존재하지 않습니다.".formatted(id);
+        }
+
+        articles.remove(article);
+
+        return "%d번 게시물을 삭제하였습니다.".formatted(article.getId());
+    }
+
+    @GetMapping("/addPerson") //이거 말고
+    @ResponseBody
+    public Person addPerson(int id, int age, String name) {
+        Person p = new Person(id, age, name);
+        return p;
+    }
+
+    @Getter
+    @Setter
+    @AllArgsConstructor
+    class Article {
+        private static int lastId = 0;
+        private int id;
+        private String title;
+        private String body;
+
+        public Article(String title, String body) {
+            this(++lastId, title, body);
+        }
+    }
+
+    @AllArgsConstructor
+    class Person {
+        private int id;
+        private int age;
+        private String name;
     }
 }
