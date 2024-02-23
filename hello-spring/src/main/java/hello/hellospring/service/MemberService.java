@@ -3,12 +3,12 @@ package hello.hellospring.service;
 import hello.hellospring.domain.Member;
 import hello.hellospring.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
-
+@Transactional
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -18,7 +18,9 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
-    //회원가입
+    /**
+     * 회원가입
+     */
     public Long join(Member member) {
         //같은 이름이 있는 중복 회원X
         /*
@@ -33,7 +35,9 @@ public class MemberService {
         return member.getId();
     }
 
-    //메서드로 뽑아놓은 중복 회원 검증 메서드
+    /**
+     * 중복 회원 검증 메서드
+     */
     private void validateDuplicateMember(Member member) {
         memberRepository.findByName(member.getName())
                 .ifPresent(m -> {
@@ -41,7 +45,9 @@ public class MemberService {
                 });
     }
 
-    //전체 회원 조회
+    /**
+     * 전체 회원 조회
+     */
     public List<Member> findMembers() {
         return memberRepository.findAll();
     }
